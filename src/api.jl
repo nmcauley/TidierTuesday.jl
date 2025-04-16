@@ -1,6 +1,6 @@
 const TIDYTUESDAY_REPO = "rfordatascience/tidytuesday"
 const API_BASE_URL = "https://api.github.com"
-const RAW_CONTENT_URL = "https://raw.githubusercontent.com/$TIDYTUESDAY_REPO/main"
+const RAW_CONTENT_URL = "https://raw.githubusercontent.com/$TIDYTUESDAY_REPO/refs/heads/main"
 
 # Check GitHub API rate limit
 function check_rate_limit()
@@ -60,7 +60,7 @@ end
 # Get README URL for a specific dataset
 function get_readme_url(date_str::AbstractString)
     year = split(date_str, "-")[1]
-    return "$RAW_CONTENT_URL/data/$year/$date_str/README.md"
+    return "$RAW_CONTENT_URL/data/$year/$date_str/readme.md"
 end
 
 # Get file list for a specific dataset

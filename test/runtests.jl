@@ -1,5 +1,5 @@
 using Test
-using JuliaTuesday
+using TidyTuesday
 using Dates
 using Pkg
 
