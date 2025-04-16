@@ -1,7 +1,7 @@
 name = "TidyTuesday"
 uuid = "e5e0dc1b-0480-4754-b82b-fe0573bb955c"
-authors = []
-version = "0.1.0"
+authors = ['n.m.v.c', 'f.t.h.ii']
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

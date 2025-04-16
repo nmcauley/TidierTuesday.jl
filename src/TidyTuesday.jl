@@ -1,4 +1,4 @@
-module JuliaTuesday
+module TidyTuesday
 
 using Dates
 using HTTP
