@@ -1,4 +1,4 @@
-name = "TidyTuesday.jl"
+name = "TidyTuesday"
 uuid = "e5e0dc1b-0480-4754-b82b-fe0573bb955c"
 authors = []
 version = "0.1.0"

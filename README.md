@@ -1,6 +1,8 @@
-# JuliaTuesday
+# TidyTuesday.jl
 
-JuliaTuesday is a Julia package that ports the functionality of the TidyTuesday CRAN package to Julia. It provides a suite of functions for accessing and downloading TidyTuesday datasets hosted on GitHub.
+TidyTuesday.jl is a Julia package that ports the functionality of the TidyTuesday CRAN package to Julia. It provides a suite of functions for accessing and downloading TidyTuesday datasets hosted on GitHub.
+
+> **Note:** This package provides access to datasets from the [official TidyTuesday repository](https://github.com/rfordatascience/tidytuesday), a weekly social data project in R.
 
 ## Features
 
@@ -12,17 +14,17 @@ JuliaTuesday is a Julia package that ports the functionality of the TidyTuesday 
 
 ## Installation
 
-You can install JuliaTuesday using Julia's package manager. From the Julia REPL:
+You can install TidyTuesday.jl using Julia's package manager. From the Julia REPL:
 
 ```julia
 using Pkg
-Pkg.add("JuliaTuesday")
+Pkg.add("TidyTuesday")
 ```
 
 Or in pkg mode (press `]` in the REPL):
 
 ```julia
-pkg> add JuliaTuesday
+pkg> add TidyTuesday
 ```
 
 ## Usage
@@ -30,7 +32,7 @@ pkg> add JuliaTuesday
 Once you have installed the package, you can start using it:
 
 ```julia
-using JuliaTuesday
+using TidyTuesday
 ```
 
 ### Basic Functions
@@ -90,7 +92,7 @@ using JuliaTuesday
 Here's a complete example of how to discover, download, and explore TidyTuesday data:
 
 ```julia
-using JuliaTuesday
+using TidyTuesday
 using DataFrames
 using CSV
 using Plots
