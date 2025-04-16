@@ -1,6 +1,6 @@
 const TIDYTUESDAY_REPO = "rfordatascience/tidytuesday"
 const API_BASE_URL = "https://api.github.com"
-const RAW_CONTENT_URL = "https://raw.githubusercontent.com/$TIDYTUESDAY_REPO/main"
+const RAW_CONTENT_URL = "https://raw.githubusercontent.com/$TIDYTUESDAY_REPO/refs/heads/main"
 
 # Check GitHub API rate limit
 function check_rate_limit()
