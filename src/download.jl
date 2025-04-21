@@ -1,11 +1,11 @@
 # Download a specific file from a dataset
-function download_file(date_str::AbstractString, filename::AbstractString)
+function download_file(date_str::AbstractString, filename::AbstractString, target_path::AbstractString=filename)
     year = split(date_str, "-")[1]
     url = "$RAW_CONTENT_URL/data/$year/$date_str/$filename"
     
     try
         response = HTTP.get(url)
-        open(filename, "w") do io
+        open(target_path, "w") do io
             write(io, response.body)
         end
         return true

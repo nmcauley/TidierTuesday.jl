@@ -5,18 +5,23 @@ using HTTP
 using JSON3
 using DataFrames
 using CSV
+using Serialization
 
 # Export public functions
-export get_last_tuesday,
+export tt_load,
+       get_last_tuesday,
        list_datasets,
        download_file,
        download_dataset,
        show_readme,
-       check_rate_limit
+       check_rate_limit,
+       set_cache_dir,
+       get_cache_dir
 
 # Include sub-modules
 include("dates.jl")
 include("api.jl")
 include("download.jl")
+include("load.jl")
 
 end # module 

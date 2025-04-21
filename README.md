@@ -4,11 +4,13 @@ TidyTuesday.jl is a Julia package that ports the functionality of the TidyTuesda
 
 ## Features
 
+* **Direct dataset loading:** Load datasets directly as DataFrames with automatic caching
 * **Get the most recent Tuesday date:** Useful for aligning with TidyTuesday releases
 * **List available datasets:** Discover available TidyTuesday datasets across years
 * **Download datasets:** Retrieve individual files or complete datasets
 * **Display dataset README:** Open the dataset's README in your web browser
 * **Check GitHub API rate limits:** Monitor your GitHub API usage
+* **Configurable caching:** Control where and how datasets are cached
 
 ## Installation
 
@@ -32,6 +34,52 @@ Once you have installed the package, you can start using it:
 ```julia
 using TidyTuesday
 ```
+
+### Loading Datasets
+
+The main function for loading datasets is `tt_load`. It returns a NamedTuple of DataFrames:
+
+```julia
+# Load by date
+data = tt_load("2024-04-16")
+# Access datasets like:
+data.dataset1
+data.dataset2
+
+# Or load by year and week
+data = tt_load(2024, 16)  # 16th week of 2024
+```
+
+By default, datasets are cached to avoid repeated downloads. You can disable caching with:
+
+```julia
+data = tt_load("2024-04-16", use_cache=false)
+```
+
+### Cache Configuration
+
+By default, datasets are cached in `~/.tidytuesday/cache`. You can configure the cache location in several ways:
+
+1. **Environment Variable**: Set the `TIDYTUESDAY_CACHE_DIR` environment variable:
+   ```bash
+   # In your shell
+   export TIDYTUESDAY_CACHE_DIR="/path/to/cache"
+   ```
+
+2. **Runtime Configuration**: Use the `set_cache_dir` function:
+   ```julia
+   # Set cache to a project-specific directory
+   set_cache_dir(joinpath(pwd(), ".tidytuesday", "cache"))
+   
+   # Set cache to a custom location
+   set_cache_dir("/path/to/cache")
+   ```
+
+3. **Check Current Cache Location**:
+   ```julia
+   cache_path = get_cache_dir()
+   println("Using cache at: $cache_path")
+   ```
 
 ### Basic Functions
 
@@ -87,61 +135,66 @@ using TidyTuesday
 
 ### Basic Workflow
 
-Here's a complete example of how to discover, download, and explore TidyTuesday data:
+Here's a complete example of how to discover and analyze TidyTuesday data:
 
 ```julia
 using TidyTuesday
 using DataFrames
-using CSV
 using Plots
 
 # 1. Find the most recent Tuesday date
 tuesday = get_last_tuesday()
 println("Most recent Tuesday: ", tuesday)
 
-# 2. List all available datasets
-all_datasets = list_datasets()
-println("Total datasets available: ", length(all_datasets))
+# 2. Load the dataset directly as DataFrames
+data = tt_load(tuesday)
 
-# 3. List datasets for a specific year
-year_datasets = list_datasets(2025)
-println("Datasets for 2025: ", length(year_datasets))
-
-# 4. Download a specific file from a dataset
-download_file("2025-03-11", "example.csv")
-
-# 5. Read and analyze the data using Julia's DataFrames
-df = CSV.read("example.csv", DataFrame)
-
-# Display the first few rows
-first(df, 5)
-
-# Get basic information about the dataset
-describe(df)
-
-# Create a simple visualization
-plot(df.x, df.y, 
-     title="TidyTuesday Data Visualization",
-     xlabel="X Axis",
-     ylabel="Y Axis",
-     seriestype=:scatter)
+# 3. Access and analyze the datasets
+for (name, df) in pairs(data)
+    println("\nDataset: $name")
+    println(describe(df))
+    
+    # Create a simple visualization if appropriate
+    if ncol(df) >= 2
+        plot(df[!, 1], df[!, 2], 
+            title="TidyTuesday Data Visualization - $name",
+            xlabel=names(df)[1],
+            ylabel=names(df)[2],
+            seriestype=:scatter)
+    end
+end
 ```
 
-### Direct Data Loading
+### Project-Specific Cache Example
 
-You can also read data directly from GitHub without downloading:
+If you want to keep the cache within your project directory:
 
 ```julia
-using HTTP
-using CSV
+using TidyTuesday
+
+# Set up project-specific cache
+set_cache_dir(joinpath(pwd(), ".tidytuesday", "cache"))
+
+# Load and analyze data
+data = tt_load("2024-04-16")
+# ... work with data ...
+```
+
+### Manual Download Workflow
+
+If you prefer to download and work with files directly:
+
+```julia
+using TidyTuesday
 using DataFrames
+using CSV
 
-# Read a CSV file directly from GitHub
-url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-18/palmtrees.csv"
-df = CSV.read(HTTP.get(url).body, DataFrame)
+# Download a specific file
+download_file("2024-04-16", "data.csv")
 
-# Analyze the data
-first(df, 5)
+# Read and analyze the data
+df = CSV.read("data.csv", DataFrame)
+describe(df)
 ```
 
 ## Dependencies
@@ -150,7 +203,9 @@ first(df, 5)
 - HTTP.jl
 - JSON3.jl
 - DataFrames.jl
+- CSV.jl
 - Dates (stdlib)
+- Serialization (stdlib)
 
 ## License
 
