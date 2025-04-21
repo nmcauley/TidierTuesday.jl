@@ -165,21 +165,6 @@ for (name, df) in pairs(data)
 end
 ```
 
-### Project-Specific Cache Example
-
-If you want to keep the cache within your project directory:
-
-```julia
-using TidyTuesday
-
-# Set up project-specific cache
-set_cache_dir(joinpath(pwd(), ".tidytuesday", "cache"))
-
-# Load and analyze data
-data = tt_load("2024-04-16")
-# ... work with data ...
-```
-
 ### Manual Download Workflow
 
 If you prefer to download and work with files directly:
