@@ -34,6 +34,11 @@ function download_dataset(date_str::AbstractString)
 end
 
 # Show README in default browser
+function show_readme(date::Date)
+    date_str = Dates.format(date, "yyyy-mm-dd")
+    return show_readme(date_str)
+end
+
 function show_readme(date_str::AbstractString)
     url = get_readme_url(date_str)
     

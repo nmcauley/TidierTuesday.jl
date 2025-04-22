@@ -50,17 +50,25 @@ function tt_load(date::Union{String,Date}; use_cache=true)
     # Create cache directory if it doesn't exist
     mkpath(CACHE_DIR)
     
-    # Check if we have a valid cache
-    cache_file = joinpath(CACHE_DIR, "$(date_str)_v$(CACHE_VERSION).jls")
-    if use_cache && isfile(cache_file)
-        try
-            return Serialization.deserialize(cache_file)
-        catch e
-            @warn "Failed to load cache, downloading fresh data" exception=e
+    # Create date-specific cache directory
+    date_cache_dir = joinpath(CACHE_DIR, date_str)
+    
+    if use_cache && isdir(date_cache_dir)
+        # Try loading from cache first
+        datasets = NamedTuple()
+        for file in readdir(date_cache_dir)
+            if endswith(lowercase(file), ".csv")
+                name = Symbol(splitext(file)[1])
+                df = CSV.read(joinpath(date_cache_dir, file), DataFrame)
+                datasets = merge(datasets, NamedTuple{(name,)}((df,)))
+            end
+        end
+        if !isempty(datasets)
+            return datasets
         end
     end
     
-    # Get list of files for this dataset
+    # If we get here, either cache is disabled or files weren't found
     files = get_dataset_files(date_str)
     
     # Create a temporary directory for downloads
@@ -80,18 +88,16 @@ function tt_load(date::Union{String,Date}; use_cache=true)
             # Add to datasets NamedTuple
             name = Symbol(splitext(file.name)[1])
             datasets = merge(datasets, NamedTuple{(name,)}((df,)))
+            
+            # Cache the CSV if caching is enabled
+            if use_cache
+                mkpath(date_cache_dir)
+                cp(temp_file, joinpath(date_cache_dir, file.name), force=true)
+            end
         end
     end
     
-    # Cache the result if caching is enabled
-    if use_cache
-        try
-            Serialization.serialize(cache_file, datasets)
-        catch e
-            @warn "Failed to cache datasets" exception=e
-        end
-    end
-    
+    println("Cleanup temp dir: ", temp_dir)
     # Clean up temp directory
     rm(temp_dir, recursive=true)
     

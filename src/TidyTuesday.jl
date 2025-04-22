@@ -5,7 +5,6 @@ using HTTP
 using JSON3
 using DataFrames
 using CSV
-using Serialization
 
 # Export public functions
 export tt_load,
