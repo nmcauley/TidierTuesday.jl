@@ -190,7 +190,6 @@ describe(df)
 - DataFrames.jl
 - CSV.jl
 - Dates (stdlib)
-- Serialization (stdlib)
 
 ## License
 
