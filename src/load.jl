@@ -2,7 +2,7 @@
 const DEFAULT_CACHE_DIR = joinpath(homedir(), ".tidytuesday", "cache")
 
 # Allow override via environment variable
-const CACHE_DIR = get(ENV, "TIDYTUESDAY_CACHE_DIR", DEFAULT_CACHE_DIR)
+global CACHE_DIR = get(ENV, "TIDYTUESDAY_CACHE_DIR", DEFAULT_CACHE_DIR)
 
 const CACHE_VERSION = 1  # Increment this when cache format changes
 
@@ -14,15 +14,6 @@ caching operations.
 
 # Arguments
 - `path`: The path to use for caching datasets
-
-# Example
-```julia
-# Set cache to a project-specific directory
-set_cache_dir(joinpath(pwd(), ".tidytuesday", "cache"))
-
-# Set cache to a custom location
-set_cache_dir("/path/to/cache")
-```
 """
 function set_cache_dir(path::AbstractString)
     global CACHE_DIR
@@ -35,15 +26,6 @@ end
     get_cache_dir()
 
 Get the current cache directory path.
-
-# Returns
-The path to the current cache directory.
-
-# Example
-```julia
-cache_path = get_cache_dir()
-println("Using cache at: $cache_path")
-```
 """
 function get_cache_dir()
     return CACHE_DIR
@@ -61,13 +43,6 @@ Load TidyTuesday datasets for a specific date. Returns a NamedTuple of DataFrame
 # Returns
 A NamedTuple where each field is a DataFrame containing the dataset.
 
-# Example
-```julia
-data = tt_load("2024-04-16")
-# Access datasets like:
-data.dataset1
-data.dataset2
-```
 """
 function tt_load(date::Union{String,Date}; use_cache=true)
     date_str = date isa Date ? Dates.format(date, "yyyy-mm-dd") : date
@@ -79,7 +54,7 @@ function tt_load(date::Union{String,Date}; use_cache=true)
     cache_file = joinpath(CACHE_DIR, "$(date_str)_v$(CACHE_VERSION).jls")
     if use_cache && isfile(cache_file)
         try
-            return deserialize(cache_file)
+            return Serialization.deserialize(cache_file)
         catch e
             @warn "Failed to load cache, downloading fresh data" exception=e
         end
@@ -111,7 +86,7 @@ function tt_load(date::Union{String,Date}; use_cache=true)
     # Cache the result if caching is enabled
     if use_cache
         try
-            serialize(cache_file, datasets)
+            Serialization.serialize(cache_file, datasets)
         catch e
             @warn "Failed to cache datasets" exception=e
         end
