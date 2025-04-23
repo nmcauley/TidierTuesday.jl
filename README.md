@@ -182,6 +182,16 @@ df = CSV.read("data.csv", DataFrame)
 describe(df)
 ```
 
+### Direct Data Loading
+
+You can also read data directly from GitHub without downloading:
+
+```julia
+# Read a CSV file directly from GitHub
+url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-18/palmtrees.csv"
+df = CSV.read(HTTP.get(url).body, DataFrame)
+```
+
 ## Dependencies
 
 - Julia 1.6 or higher
