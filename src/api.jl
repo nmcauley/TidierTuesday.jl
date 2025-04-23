@@ -11,47 +11,46 @@ end
 
 # List available datasets, optionally filtered by year
 function list_datasets(year::Union{Integer, Nothing}=nothing)
-    if year === nothing
-        # Get the contents of the data directory
-        url = "$API_BASE_URL/repos/$TIDYTUESDAY_REPO/contents/data"
+    # Helper function to create dataset info
+    function create_dataset_info(item, year_info=nothing)
+        base_info = (
+            date = item.name,
+            path = item.path,
+            url = item.url
+        )
+
+        return year_info === nothing ? base_info : 
+            merge(base_info, (year = year_info,))
+    end
+
+    # Helper function to fetch and parse GitHub contents
+    function fetch_contents(path)
+        url = "$API_BASE_URL/repos/$TIDYTUESDAY_REPO/contents/$path"
         response = HTTP.get(url)
-        years = JSON3.read(response.body)
+        return JSON3.read(response.body)
+    end
+
+    if year === nothing
+        # Get all years
+        years = fetch_contents("data")
         
-        all_datasets = []
-        
-        # Iterate through each year
-        for year_dir in years
-            if year_dir.type == "dir"
-                year_datasets = list_datasets(parse(Int, year_dir.name))
-                for dataset in year_datasets
-                    push!(all_datasets, (
-                        year = year_dir.name,
-                        date = dataset.date,
-                        path = dataset.path,
-                        url = dataset.url
-                    ))
-                end
-            end
-        end
+        # Collect datasets from all years
+        all_datasets = [(
+            year = year_dir.name,
+            dataset_info...
+        ) for year_dir in years
+          if year_dir.type == "dir"
+          for dataset_info in list_datasets(parse(Int, year_dir.name))]
         
         return sort(all_datasets, by = x -> (x.year, x.date))
     else
-        # Get the contents of the data directory for the specified year
-        url = "$API_BASE_URL/repos/$TIDYTUESDAY_REPO/contents/data/$year"
-        response = HTTP.get(url)
-        contents = JSON3.read(response.body)
+        # Get specific year's datasets
+        contents = fetch_contents("data/$year")
         
-        # Filter and format the dataset information
-        datasets = []
-        for item in contents
-            if item.type == "dir"
-                push!(datasets, (
-                    date = item.name,
-                    path = item.path,
-                    url = item.url
-                ))
-            end
-        end
+        # Filter directories and create dataset info
+        datasets = [create_dataset_info(item) 
+                   for item in contents 
+                   if item.type == "dir"]
         
         return sort(datasets, by = x -> x.date)
     end

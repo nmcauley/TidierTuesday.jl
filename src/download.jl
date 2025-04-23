@@ -1,11 +1,11 @@
 # Download a specific file from a dataset
-function download_file(date_str::AbstractString, filename::AbstractString)
+function download_file(date_str::AbstractString, filename::AbstractString, target_path::AbstractString=filename)
     year = split(date_str, "-")[1]
     url = "$RAW_CONTENT_URL/data/$year/$date_str/$filename"
     
     try
         response = HTTP.get(url)
-        open(filename, "w") do io
+        open(target_path, "w") do io
             write(io, response.body)
         end
         return true
@@ -34,7 +34,10 @@ function download_dataset(date_str::AbstractString)
 end
 
 # Show README in default browser
-function show_readme(date_str::AbstractString)
+function show_readme(date::Union{String,Date})
+    # Convert Date to string if needed
+    date_str = date isa Date ? Dates.format(date, "yyyy-mm-dd") : date
+    
     url = get_readme_url(date_str)
     
     # Different commands for different operating systems
