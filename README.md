@@ -1,6 +1,6 @@
-# TidyTuesday.jl
+# TidierTuesday.jl
 
-TidyTuesday.jl is a Julia package that ports the functionality of the TidyTuesday CRAN package to Julia. It provides a suite of functions for accessing and downloading [TidyTuesday](https://github.com/rfordatascience/tidytuesday) datasets hosted on GitHub.
+TidierTuesday.jl is a Julia package that ports the functionality of the TidyTuesday CRAN package to Julia. It provides a suite of functions for accessing and downloading [TidyTuesday](https://github.com/rfordatascience/tidytuesday) datasets hosted on GitHub.
 
 ## Features
 
