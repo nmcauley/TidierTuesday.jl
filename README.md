@@ -14,17 +14,17 @@ TidierTuesday.jl is a Julia package that ports the functionality of the TidyTues
 
 ## Installation
 
-You can install TidyTuesday.jl using Julia's package manager. From the Julia REPL:
+You can install TidierTuesday.jl using Julia's package manager. From the Julia REPL:
 
 ```julia
 using Pkg
-Pkg.add("TidyTuesday")
+Pkg.add("TidierTuesday")
 ```
 
 Or in pkg mode (press `]` in the REPL):
 
 ```julia
-pkg> add TidyTuesday
+pkg> add TidierTuesday
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ pkg> add TidyTuesday
 Once you have installed the package, you can start using it:
 
 ```julia
-using TidyTuesday
+using TidierTuesday
 ```
 
 ### Loading Datasets
@@ -138,7 +138,7 @@ By default, datasets are cached in `~/.tidytuesday/cache`. You can configure the
 Here's a complete example of how to discover and analyze TidyTuesday data:
 
 ```julia
-using TidyTuesday
+using TidierTuesday
 using DataFrames
 using Plots
 
@@ -170,7 +170,7 @@ end
 If you prefer to download and work with files directly:
 
 ```julia
-using TidyTuesday
+using TidierTuesday
 using DataFrames
 using CSV
 
