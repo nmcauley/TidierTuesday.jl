@@ -1,4 +1,4 @@
-module TidyTuesday
+module TidierTuesday
 
 using Dates
 using HTTP
