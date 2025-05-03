@@ -1,7 +1,7 @@
 name = "TidierTuesday"
 uuid = "e5e0dc1b-0480-4754-b82b-fe0573bb955c"
-authors = ['nolan cauley']
-contributors = ['frank hull']
+authors = ["nolan cauley"]
+contributors = ["frank hull"]
 version = "0.1.3"
 
 [deps]
@@ -11,9 +11,16 @@ Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
+
 [compat]
 CSV = "0.10"
 DataFrames = "1.5"
 HTTP = "1.9"
 JSON3 = "1.13" 
+Test = "1.8"
 julia = "1.6"
